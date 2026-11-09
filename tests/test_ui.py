@@ -38,7 +38,7 @@ def make_store(tmp_path) -> DataStore:
 
 def seated_app(tmp_path, *, players: int = 4):
     store = make_store(tmp_path)
-    store.create_profile("Joseph", "casual")
+    store.create_profile("Alice", "casual")
     app = OmaPokerApp(store=store, seed=1234)
     return app
 
@@ -90,7 +90,7 @@ def test_first_run_asks_for_a_name_and_experience(tmp_path):
 
             assert isinstance(app.screen, OnboardingScreen)
             # The name box already has focus, so type straight into it.
-            await pilot.press(*"Joseph")
+            await pilot.press(*"Alice")
             await pilot.press("down")
             await pilot.press("enter")
             await pilot.pause()
@@ -98,7 +98,7 @@ def test_first_run_asks_for_a_name_and_experience(tmp_path):
 
     run(scenario())
     profiles = store.list_profiles()
-    assert [p.name for p in profiles] == ["Joseph"]
+    assert [p.name for p in profiles] == ["Alice"]
     assert store.bankroll_for(profiles[0].id).chips == STARTING_CHIPS
 
 
@@ -139,7 +139,7 @@ def test_app_seed_reproduces_the_deal(tmp_path):
 
     def deal(root, seed):
         store = make_store(root)
-        profile = store.create_profile("Joseph", "casual")
+        profile = store.create_profile("Alice", "casual")
         app = OmaPokerApp(store=store, seed=seed)
         app.load_profile(profile)
         app.open_table = lambda: None
@@ -573,7 +573,7 @@ def test_hotseat_cards_and_advice_stay_hidden_until_the_next_player_is_ready(tmp
             await pilot.pause()
             app.start_session(
                 level_for(5_000), mode=Mode.HOTSEAT,
-                human_names=["Joseph", "Natalie"], bot_count=0,
+                human_names=["Alice", "Bob"], bot_count=0,
             )
             await pilot.pause()
             table = next(screen for screen in app.screen_stack if isinstance(screen, TableScreen))
@@ -609,8 +609,8 @@ def test_hotseat_guests_have_their_own_throwaway_bankrolls(tmp_path):
     async def scenario():
         async with app.run_test(size=SIZE) as pilot:
             await pilot.pause()
-            guests = app.guest_players(["Joseph", "Natalie", "Jeremiah"], 5_000)
-            assert [g.profile.name for g in guests] == ["Joseph", "Natalie", "Jeremiah"]
+            guests = app.guest_players(["Alice", "Bob", "Carol"], 5_000)
+            assert [g.profile.name for g in guests] == ["Alice", "Bob", "Carol"]
             assert all(g.guest for g in guests[1:])
             assert all(g.bankroll.chips == 5_000 for g in guests[1:])
 
@@ -620,7 +620,7 @@ def test_hotseat_guests_have_their_own_throwaway_bankrolls(tmp_path):
                 app.player,
                 level_for(5_000),
                 store=app.store,
-                human_names=["Joseph", "Natalie", "Jeremiah"],
+                human_names=["Alice", "Bob", "Carol"],
                 human_players=guests,
                 seed=99,
                 mode=Mode.HOTSEAT,

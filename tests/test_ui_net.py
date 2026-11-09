@@ -68,21 +68,21 @@ def make_store(tmp_path) -> DataStore:
 
 def make_app(tmp_path) -> OmaPokerApp:
     store = make_store(tmp_path)
-    store.create_profile("Joseph", "casual")
+    store.create_profile("Alice", "casual")
     return OmaPokerApp(store=store, seed=99)
 
 
 def make_offline_app(tmp_path) -> OmaPokerApp:
     """An app with a profile loaded, but never mounted."""
     store = make_store(tmp_path)
-    profile = store.create_profile("Joseph", "casual")
+    profile = store.create_profile("Alice", "casual")
     app = OmaPokerApp(store=store, seed=99)
     app.settings = store.settings()
     app.player = store.player(profile.id)
     return app
 
 
-def host_session_for(app, names=("Joseph", "Natalie"), bots: int = 1) -> GameSession:
+def host_session_for(app, names=("Alice", "Bob"), bots: int = 1) -> GameSession:
     """The session a hosted table builds: guest stacks for every remote seat."""
     players = app.guest_players(list(names), MICRO.buy_in)
     return GameSession(
@@ -220,17 +220,17 @@ def test_legal_actions_survive_the_wire():
 
 def test_remote_players_are_seated_in_the_order_they_arrived(tmp_path):
     app = make_offline_app(tmp_path)
-    session = host_session_for(app, names=("Joseph", "Natalie", "Samir"))
-    server = TableServer("OMA-7K3QF-92", "Joseph's table", host="127.0.0.1", port=0)
+    session = host_session_for(app, names=("Alice", "Bob", "Dave"))
+    server = TableServer("OMA-7K3QF-92", "Alice's table", host="127.0.0.1", port=0)
     server.start()
     try:
-        first, _ = fake_remote(server, "Natalie")
-        second, _ = fake_remote(server, "Samir")
+        first, _ = fake_remote(server, "Bob")
+        second, _ = fake_remote(server, "Dave")
         mapping = bind_remote_seats(session, server)
 
         assert mapping == {first.id: 1, second.id: 2}
-        assert session.seats[1].name == "Natalie"
-        assert session.seats[2].name == "Samir"
+        assert session.seats[1].name == "Bob"
+        assert session.seats[2].name == "Dave"
         assert session.seats[1].is_human and session.seats[2].is_human
         assert session.seats[1].profile_id == f"remote-{first.id}"
         assert session.seat_for_profile(f"remote-{second.id}").index == 2
@@ -246,7 +246,7 @@ def test_a_remote_view_only_ever_contains_that_players_cards(tmp_path):
     server = TableServer("OMA-7K3QF-92", host="127.0.0.1", port=0)
     server.start()
     try:
-        conn, _ = fake_remote(server, "Natalie")
+        conn, _ = fake_remote(server, "Bob")
         bind_remote_seats(session, server)
         session.start_hand()
         quiet_humans_except(session, 1)
@@ -279,7 +279,7 @@ def test_a_remote_player_who_is_not_to_act_gets_no_legal_actions(tmp_path):
     server = TableServer("OMA-7K3QF-92", host="127.0.0.1", port=0)
     server.start()
     try:
-        conn, _ = fake_remote(server, "Natalie")
+        conn, _ = fake_remote(server, "Bob")
         bind_remote_seats(session, server)
         session.start_hand()
         quiet_humans_except(session, 1)
@@ -357,13 +357,13 @@ def test_the_host_lobby_accepts_a_real_client(tmp_path):
 
                 def listed():
                     drain(client)
-                    return any(p["name"] == "Joseph" for p in client.state.players)
+                    return any(p["name"] == "Alice" for p in client.state.players)
 
                 assert await wait_until(listed, pilot)
                 roster = "\n".join(
                     str(widget.content) for widget in screen.query("Static")
                 )
-                assert "Joseph" in roster
+                assert "Alice" in roster
                 assert server.room_code in roster
                 # The invitation uses whichever address this machine has, so
                 # check the shape rather than a hard-coded address.
@@ -371,7 +371,7 @@ def test_the_host_lobby_accepts_a_real_client(tmp_path):
                 assert f":{server.port}/{server.room_code}" in roster
                 assert "verified" in roster
                 player = server.players()[0]
-                assert player.name == "Joseph"
+                assert player.name == "Alice"
                 assert player.verified          # the key signed the nonce
                 assert player.seat is None      # nobody is seated until the deal
             finally:
@@ -440,7 +440,7 @@ class FakeClient(TableClient):
             connected=True,
             joined=True,
             seat=seat,
-            host_name="Joseph's table",
+            host_name="Alice's table",
             room_code="OMA-7K3QF-92",
         )
         self.sent: list[dict] = []
@@ -481,7 +481,7 @@ def test_a_joined_guest_can_wait_in_the_lobby_past_the_handshake_deadline(tmp_pa
             client.state.seat = None
             joining.client = client
             joining._deadline = time.monotonic() - 1.0
-            client.feed({"t": "welcome", "seat": None, "host": "Joseph's table"})
+            client.feed({"t": "welcome", "seat": None, "host": "Alice's table"})
             joining.pump()
 
             assert joining.client is client
@@ -503,7 +503,7 @@ def test_the_remote_screen_renders_the_hosts_view(tmp_path):
     async def scenario():
         async with app.run_test(size=SIZE) as pilot:
             session = host_session_for(app)
-            conn, _ = fake_remote(server, "Natalie")
+            conn, _ = fake_remote(server, "Bob")
             bind_remote_seats(session, server)
             session.start_hand()
             quiet_humans_except(session, 1)
@@ -526,7 +526,7 @@ def test_the_remote_screen_renders_the_hosts_view(tmp_path):
             assert theme.card_markup(hole[0], style) in text
             assert theme.card_markup(hole[1], style) in text
             assert f"{session.hand.total_pot:,}" in text
-            assert "Natalie" in text  # the seat is labelled from the host's view
+            assert "Bob" in text  # the seat is labelled from the host's view
 
             # Their turn: the bar is live and an action goes down the wire.
             assert not screen.query_one("#btn-call", Button).disabled
@@ -555,8 +555,8 @@ def test_the_remote_screen_refuses_actions_that_are_not_offered(tmp_path):
                     "t": "state",
                     "hand_id": 1,
                     "seats": [
-                        {"index": 0, "name": "Joseph", "stack": 5_000, "hole": []},
-                        {"index": 1, "name": "Natalie", "stack": 5_000, "hole": []},
+                        {"index": 0, "name": "Alice", "stack": 5_000, "hole": []},
+                        {"index": 1, "name": "Bob", "stack": 5_000, "hole": []},
                     ],
                     "board": [],
                     "pot": 30,
@@ -573,7 +573,7 @@ def test_the_remote_screen_refuses_actions_that_are_not_offered(tmp_path):
             screen.action_fold()          # not offered, so it never leaves
             screen.action_raise_mode()
             assert client.sent == []
-            assert "Waiting for Joseph" in str(screen.query_one("#coach-panel").content)
+            assert "Waiting for Alice" in str(screen.query_one("#coach-panel").content)
 
     run(scenario())
 
@@ -621,14 +621,14 @@ def test_the_remote_screen_goes_home_when_the_host_says_goodbye(tmp_path):
 # the hosted table
 # --------------------------------------------------------------------------
 
-async def open_hosted_table(app, server, pilot, remote="Natalie"):
+async def open_hosted_table(app, server, pilot, remote="Bob"):
     """Start a hosted table with one fake remote player already in the lobby."""
     conn, sock = fake_remote(server, remote)
     app.host_server = server
     app.start_session(
         MICRO,
         mode=Mode.HOST,
-        human_names=["Joseph", remote],
+        human_names=["Alice", remote],
         bot_count=1,
     )
     await settle(pilot)
@@ -640,7 +640,7 @@ async def open_hosted_table(app, server, pilot, remote="Natalie"):
 
 def test_the_hosted_table_seats_the_remote_and_broadcasts(tmp_path):
     app = make_app(tmp_path)
-    server = TableServer("OMA-7K3QF-92", "Joseph's table", host="127.0.0.1", port=0)
+    server = TableServer("OMA-7K3QF-92", "Alice's table", host="127.0.0.1", port=0)
     server.start()
 
     async def scenario():
@@ -649,7 +649,7 @@ def test_the_hosted_table_seats_the_remote_and_broadcasts(tmp_path):
             session = app.session
 
             assert conn.seat == 1
-            assert session.seats[1].name == "Natalie"
+            assert session.seats[1].name == "Bob"
             assert session.seats[1].is_human
             assert screen._my_seats == {0}
 
@@ -884,7 +884,7 @@ def test_the_lobby_hands_the_server_over_to_the_table(tmp_path):
             server = app.host_server
             assert server is not None
 
-            other = app.store.create_profile("Natalie", "casual")
+            other = app.store.create_profile("Bob", "casual")
             client = TableClient(app.store.player(other.id), timeout=3.0)
             try:
                 client.connect("127.0.0.1", server.port, server.room_code)
@@ -892,13 +892,13 @@ def test_the_lobby_hands_the_server_over_to_the_table(tmp_path):
                     lambda: (drain(client), client.state.joined)[1], pilot
                 )
                 guest = server.players()[0]
-                assert guest.name == "Natalie"
+                assert guest.name == "Bob"
 
                 # The real path: the session starts, then the table goes on top.
                 app.start_session(
                     MICRO,
                     mode=Mode.HOST,
-                    human_names=["Joseph", "Natalie"],
+                    human_names=["Alice", "Bob"],
                     bot_count=1,
                 )
                 await settle(pilot)
@@ -947,18 +947,18 @@ def test_the_host_uses_the_current_roster_when_the_buy_in_is_chosen(tmp_path):
         async with app.run_test(size=SIZE) as pilot:
             await app.push_screen(HostScreen())
             server = app.host_server
-            first, _ = fake_remote(server, "Natalie")
+            first, _ = fake_remote(server, "Bob")
             await pilot.press("s")
             assert isinstance(app.screen, TablePickerScreen)
             # One guest leaves and another arrives while the picker is up.
             server.remove(first)
-            current, _ = fake_remote(server, "Jeremiah")
+            current, _ = fake_remote(server, "Carol")
             app.screen.query_one("#ladder-list", ListView).index = 95
             await pilot.press("enter")
             await settle(pilot)
 
             assert isinstance(app.screen, HostTableScreen)
-            assert [seat.name for seat in app.session.seats if seat.is_human] == ["Joseph", "Jeremiah"]
+            assert [seat.name for seat in app.session.seats if seat.is_human] == ["Alice", "Carol"]
             assert current.seat == 1
             assert app.session.seats[current.seat].is_human
 
@@ -997,12 +997,12 @@ def test_a_guest_joins_over_a_socket_and_plays_a_hand(tmp_path):
     screen uses, while the guest half is the real screen on a real socket.
     """
     app = make_app(tmp_path)
-    server = TableServer("OMA-7K3QF-92", "Joseph's table", host="127.0.0.1", port=0)
+    server = TableServer("OMA-7K3QF-92", "Alice's table", host="127.0.0.1", port=0)
     server.start()
 
     async def scenario():
         async with app.run_test(size=SIZE) as pilot:
-            session = host_session_for(app, names=("Joseph", "Natalie"))
+            session = host_session_for(app, names=("Alice", "Bob"))
             invite = f"omapoker://127.0.0.1:{server.port}/{server.room_code}"
             await app.push_screen(JoinScreen(prefill=invite))
             await settle(pilot)
@@ -1045,7 +1045,7 @@ def test_a_guest_joins_over_a_socket_and_plays_a_hand(tmp_path):
                             {
                                 "t": "lobby",
                                 "players": [
-                                    {"name": "Joseph", "verified": True, "ready": False}
+                                    {"name": "Alice", "verified": True, "ready": False}
                                 ],
                             }
                         )

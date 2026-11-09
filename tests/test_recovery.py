@@ -25,7 +25,7 @@ def make_store(tmp_path) -> DataStore:
 
 def make_session(tmp_path, *, level=MICRO, **kwargs):
     store = make_store(tmp_path)
-    profile = store.create_profile("Joseph", "casual")
+    profile = store.create_profile("Alice", "casual")
     player = store.player(profile.id)
     session = GameSession(
         player,
@@ -146,7 +146,7 @@ def test_a_note_with_nothing_on_it_is_just_cleared(tmp_path):
 
 def test_a_guest_at_a_hot_seat_table_leaves_no_note(tmp_path):
     store = make_store(tmp_path)
-    profile = store.create_profile("Joseph", "casual")
+    profile = store.create_profile("Alice", "casual")
     host = store.player(profile.id)
     guest_store = make_store(tmp_path / "guests")
     guest_profile = guest_store.create_profile("Friend", "casual")
@@ -184,7 +184,7 @@ def test_quitting_the_app_with_a_live_table_cashes_in(tmp_path):
     from omapoker.ui.app import OmaPokerApp
 
     store = make_store(tmp_path)
-    profile = store.create_profile("Joseph", "casual")
+    profile = store.create_profile("Alice", "casual")
     store.update_setting("visualiser", False)
     store.update_setting("cards_style", "ascii")
     store.update_setting("lan_port", 0)
@@ -216,7 +216,7 @@ def test_ctrl_c_at_the_table_cashes_in(tmp_path):
     from omapoker.ui.app import OmaPokerApp
 
     store = make_store(tmp_path)
-    profile = store.create_profile("Joseph", "casual")
+    profile = store.create_profile("Alice", "casual")
     store.update_setting("visualiser", False)
     store.update_setting("lan_port", 0)
 
@@ -248,7 +248,7 @@ def test_an_empty_bankroll_offers_a_way_back_in(tmp_path):
     from omapoker.ui.screens.ladder import TablePickerScreen
 
     store = make_store(tmp_path)
-    profile = store.create_profile("Joseph", "casual")
+    profile = store.create_profile("Alice", "casual")
     store.update_setting("visualiser", False)
     store.update_setting("lan_port", 0)
     player = store.player(profile.id)
@@ -284,7 +284,7 @@ def test_the_next_start_recovers_a_stack_left_behind(tmp_path):
     from omapoker.ui.app import OmaPokerApp
 
     store = make_store(tmp_path)
-    profile = store.create_profile("Joseph", "casual")
+    profile = store.create_profile("Alice", "casual")
     store.update_setting("visualiser", False)
     store.update_setting("cards_style", "ascii")
     store.update_setting("lan_port", 0)
@@ -315,7 +315,7 @@ def test_resetting_the_bankroll_clears_an_old_note(tmp_path):
     from omapoker.ui.app import OmaPokerApp
 
     store = make_store(tmp_path)
-    profile = store.create_profile("Joseph", "casual")
+    profile = store.create_profile("Alice", "casual")
     store.update_setting("visualiser", False)
     store.update_setting("lan_port", 0)
     store.set_active_profile(profile.id)
@@ -340,7 +340,7 @@ def test_resetting_the_bankroll_clears_an_old_note(tmp_path):
 
 def test_deleting_a_profile_takes_its_note_with_it(tmp_path):
     store = make_store(tmp_path)
-    profile = store.create_profile("Joseph", "casual")
+    profile = store.create_profile("Alice", "casual")
     store.save_table_seat(
         TableSeat(profile_id=profile.id, level=MICRO.name, stack=1_000)
     )

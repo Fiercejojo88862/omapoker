@@ -129,10 +129,10 @@ def test_local_addresses_prefers_something_reachable():
 # --------------------------------------------------------------------------
 
 def test_messages_are_one_line_of_json():
-    payload = encode({"t": "hello", "name": "Joseph"})
+    payload = encode({"t": "hello", "name": "Alice"})
     assert payload.endswith(b"\n")
     assert payload.count(b"\n") == 1
-    assert decode(payload) == {"t": "hello", "name": "Joseph"}
+    assert decode(payload) == {"t": "hello", "name": "Alice"}
 
 
 def test_the_reader_reassembles_split_messages():
@@ -174,7 +174,7 @@ def test_decode_rejects_things_that_are_not_messages(bad):
 # identity handshake
 # --------------------------------------------------------------------------
 
-def make_player(tmp_path, name="Joseph"):
+def make_player(tmp_path, name="Alice"):
     store = DataStore(tmp_path / "config")
     profile = store.create_profile(name, "casual")
     return store.player(profile.id)
@@ -182,12 +182,12 @@ def make_player(tmp_path, name="Joseph"):
 
 @pytest.mark.skipif(not crypto_available(), reason="needs the cryptography package")
 def test_a_hello_with_the_right_code_is_accepted(tmp_path):
-    player = make_player(tmp_path, "Joseph")
+    player = make_player(tmp_path, "Alice")
     identity = player.profile.identity
     hello = {
         "t": "hello",
         "version": 1,
-        "name": "Joseph",
+        "name": "Alice",
         "code": identity.code,
         "public": identity.public_hex,
         "room": "OMA-7K3QF-92",
@@ -198,8 +198,8 @@ def test_a_hello_with_the_right_code_is_accepted(tmp_path):
 
 
 def test_a_hello_with_somebody_elses_code_is_rejected(tmp_path):
-    player = make_player(tmp_path, "Joseph")
-    other = make_player(tmp_path, "Natalie")
+    player = make_player(tmp_path, "Alice")
+    other = make_player(tmp_path, "Bob")
     hello = {
         "t": "hello",
         "version": 1,
@@ -214,12 +214,12 @@ def test_a_hello_with_somebody_elses_code_is_rejected(tmp_path):
 
 
 def test_a_hello_without_a_name_or_with_the_wrong_version_is_rejected(tmp_path):
-    player = make_player(tmp_path, "Joseph")
+    player = make_player(tmp_path, "Alice")
     identity = player.profile.identity
     good = {
         "t": "hello",
         "version": 1,
-        "name": "Joseph",
+        "name": "Alice",
         "code": identity.code,
         "public": identity.public_hex,
         "room": "OMA-7K3QF-92",
@@ -238,7 +238,7 @@ def test_a_hello_without_a_name_or_with_the_wrong_version_is_rejected(tmp_path):
 def test_the_nonce_round_trip_proves_the_key_holder(tmp_path):
     from omapoker.net.server import ClientConn
 
-    player = make_player(tmp_path, "Joseph")
+    player = make_player(tmp_path, "Alice")
     nonce = make_challenge()
     signature = player.profile.identity.sign(nonce)
 
@@ -294,9 +294,9 @@ def wait_for(predicate, timeout: float = 5.0, interval: float = 0.02):
 
 
 def test_a_client_can_join_a_host_on_loopback(tmp_path):
-    player = make_player(tmp_path, "Joseph")
+    player = make_player(tmp_path, "Alice")
     code = new_room_code()
-    server = TableServer(code, "Joseph's table", host="127.0.0.1", port=0)
+    server = TableServer(code, "Alice's table", host="127.0.0.1", port=0)
     server.start()
     client = TableClient(player, timeout=3.0)
     try:
@@ -308,7 +308,7 @@ def test_a_client_can_join_a_host_on_loopback(tmp_path):
         assert conn is not None
         message = hello.message
         assert message["t"] == "hello"
-        assert message["name"] == "Joseph"
+        assert message["name"] == "Alice"
 
         # The host runs the handshake by hand, exactly as the interface does:
         # accept the hello, remember the key, then ask for a signature.
@@ -323,7 +323,7 @@ def test_a_client_can_join_a_host_on_loopback(tmp_path):
         assert auth is not None and auth.message["t"] == "auth"
         assert check_auth(auth.conn, auth.message, nonce).ok
 
-        server.send(conn, {"t": "welcome", "seat": 1, "host": "Joseph's table", "code": code})
+        server.send(conn, {"t": "welcome", "seat": 1, "host": "Alice's table", "code": code})
         announced = wait_for(lambda: _typed(client, "welcome"))
         assert announced is not None
         for message in client.poll():
@@ -344,7 +344,7 @@ def test_a_client_can_join_a_host_on_loopback(tmp_path):
 
 
 def test_a_bad_room_code_reaches_the_host_intact(tmp_path):
-    player = make_player(tmp_path, "Joseph")
+    player = make_player(tmp_path, "Alice")
     server = TableServer(new_room_code(), host="127.0.0.1", port=0)
     server.start()
     client = TableClient(player, timeout=3.0)
@@ -366,7 +366,7 @@ def test_a_bad_room_code_reaches_the_host_intact(tmp_path):
 
 
 def test_the_host_notices_a_client_leaving(tmp_path):
-    player = make_player(tmp_path, "Joseph")
+    player = make_player(tmp_path, "Alice")
     server = TableServer(new_room_code(), host="127.0.0.1", port=0)
     server.start()
     client = TableClient(player, timeout=3.0)
@@ -401,7 +401,7 @@ def test_the_server_refuses_a_crowd(tmp_path):
 
 
 def test_stopping_the_server_says_goodbye(tmp_path):
-    player = make_player(tmp_path, "Joseph")
+    player = make_player(tmp_path, "Alice")
     server = TableServer(new_room_code(), host="127.0.0.1", port=0)
     server.start()
     client = TableClient(player, timeout=3.0)

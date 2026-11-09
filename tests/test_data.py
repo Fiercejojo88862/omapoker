@@ -231,18 +231,18 @@ def test_profile_experience_presets_the_assist_dial():
 
 def test_create_load_and_delete_a_profile(tmp_path):
     store = DataStore(tmp_path)
-    profile = store.create_profile("Joseph", "casual")
-    assert profile.id == "joseph"
-    assert store.active_profile_id() == "joseph"
+    profile = store.create_profile("Alice", "casual")
+    assert profile.id == "alice"
+    assert store.active_profile_id() == "alice"
 
     listed = store.list_profiles()
-    assert [p.name for p in listed] == ["Joseph"]
+    assert [p.name for p in listed] == ["Alice"]
 
     profile.assist_level = 2
     store.save_profile(profile)
-    assert store.load_profile("joseph").assist_level == 2
+    assert store.load_profile("alice").assist_level == 2
 
-    assert store.delete_profile("joseph")
+    assert store.delete_profile("alice")
     assert store.list_profiles() == []
     assert store.active_profile_id() is None
 

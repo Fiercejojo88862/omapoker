@@ -23,7 +23,7 @@ def make_store(tmp_path) -> DataStore:
 
 def make_session(tmp_path, *, level=MICRO, hands_bankroll=STARTING_CHIPS, **kwargs):
     store = make_store(tmp_path)
-    profile = store.create_profile("Joseph", "casual")
+    profile = store.create_profile("Alice", "casual")
     player = store.player(profile.id)
     player.bankroll.chips = hands_bankroll
     session = GameSession(
@@ -267,24 +267,24 @@ def test_state_reports_the_table_shape(tmp_path):
 
 def test_hotseat_seats_every_named_human(tmp_path):
     store = make_store(tmp_path)
-    profile = store.create_profile("Joseph", "casual")
+    profile = store.create_profile("Alice", "casual")
     player = store.player(profile.id)
     guests = []
-    for position, name in enumerate(["Natalie", "Jeremiah"], start=1):
+    for position, name in enumerate(["Bob", "Carol"], start=1):
         guest_profile = store.create_profile(name, "casual")
         guests.append(store.player(guest_profile.id))
     session = GameSession(
         player,
         MICRO,
         store=store,
-        human_names=["Joseph", "Natalie", "Jeremiah"],
+        human_names=["Alice", "Bob", "Carol"],
         human_players=[player, *guests],
         seed=3,
         mode=Mode.HOTSEAT,
     )
     assert len(session.human_seats) == 3
     names = {index: session.seats[index].name for index in session.human_seats}
-    assert set(names.values()) == {"Joseph", "Natalie", "Jeremiah"}
+    assert set(names.values()) == {"Alice", "Bob", "Carol"}
     # Each human paid their own way.
     assert player.bankroll.chips == STARTING_CHIPS - MICRO.buy_in
 
