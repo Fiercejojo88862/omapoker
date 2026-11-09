@@ -1,0 +1,21 @@
+{
+  "Position": "Where you sit relative to the button. Acting last is a real edge: you see what everyone does before you decide.",
+  "VPIP": "Voluntarily Put money In Pot. How often you play a hand before the flop. Lower is tighter.",
+  "PFR": "Preflop Raise. How often you raise before the flop. It should be close to your VPIP if you play aggressively.",
+  "Pot odds": "The price you are being offered. Calling 25 into a pot of 100 gives you 4:1, so you need 20% equity to break even.",
+  "Equity": "Your share of the pot if the hand were played out many times.",
+  "Outs": "Cards left in the deck that improve you to a strong hand. A flush draw has nine.",
+  "The 2 and 4 rule": "Multiply your outs by 4 on the flop and 2 on the turn to estimate your chance of improving.",
+  "Range": "The set of hands a player could hold, rather than one exact hand. Thinking in ranges is the biggest leap a learner makes.",
+  "Tilt": "Playing badly because you are upset about a previous hand. The most expensive emotion in poker.",
+  "All in": "Betting every chip you have.",
+  "The button": "The seat that acts last after the flop. It moves one seat clockwise each hand.",
+  "Blinds": "Forced bets posted before the cards are dealt, to make sure there is something to play for.",
+  "Cooler": "A huge hand beaten by a bigger one. Nobody escapes these, so do not change how you play after one.",
+  "Check": "Declining to bet while staying in the hand.",
+  "Raise": "Increasing the current bet.",
+  "Call": "Matching the current bet.",
+  "Fold": "Giving up the hand and any money already in the pot.",
+  "Equity realisation": "The fact that some hands win less often than their raw equity suggests, because they are hard to play. Small suited hands are the classic example.",
+  "Bankroll management": "Choosing tables you can afford. If a buy-in is more than a small share of your chips, move down."
+}

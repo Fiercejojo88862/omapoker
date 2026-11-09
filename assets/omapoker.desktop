@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=OmaPoker
+GenericName=Poker
+Comment=Texas Hold'em for Omarchy systems
+Exec=@EXEC@
+Icon=omapoker
+Terminal=true
+Categories=Game;CardGame;
+Keywords=poker;cards;texas;holdem;hold;em;omarchy;
+StartupNotify=false

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="OmaPoker">
+  <rect width="256" height="256" rx="52" fill="#16161e"/>
+  <circle cx="128" cy="128" r="94" fill="#1f2335" stroke="#9ece6a" stroke-width="6"/>
+  <circle cx="128" cy="128" r="80" fill="none" stroke="#3b4261" stroke-width="3" stroke-dasharray="10 9"/>
+  <path fill="#9ece6a" d="M128 44
+    C128 44 62 98 62 137
+    C62 162 81 180 104 180
+    C114 180 122 176 128 168
+    C124 189 113 201 99 209
+    L157 209
+    C143 201 132 189 128 168
+    C134 176 142 180 152 180
+    C175 180 194 162 194 137
+    C194 98 128 44 128 44 Z"/>
+  <circle cx="128" cy="118" r="6" fill="#16161e" opacity="0.85"/>
+</svg>

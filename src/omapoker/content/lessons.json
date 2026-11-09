@@ -1,0 +1,56 @@
+[
+  {
+    "id": "rules",
+    "title": "How a hand works",
+    "level": "newcomer",
+    "body": "Every player gets two cards face down. There is a round of betting, then three shared cards (the flop), another betting round, a fourth card (the turn), a third round, a fifth card (the river), and a final round. You make the best five-card hand from your two cards and the five shared cards, or from the shared cards alone. The last player to act after the flop sits on the button, and that advantage is real."
+  },
+  {
+    "id": "rankings",
+    "title": "Hand rankings, best to worst",
+    "level": "newcomer",
+    "body": "Straight flush, four of a kind, full house, flush, straight, three of a kind, two pair, one pair, high card. A straight is five cards in a row; an ace can be high or low, so A-2-3-4-5 counts, and it is the weakest straight. A flush is five cards of one suit, and the highest card decides between two flushes."
+  },
+  {
+    "id": "why-fold",
+    "title": "Most hands should be folded",
+    "level": "casual",
+    "body": "You are dealt two cards from 52. Most of those combinations lose money if you play them. Strong players fold the majority of hands before the flop. Fold more than feels natural, especially in early position."
+  },
+  {
+    "id": "position",
+    "title": "Position is worth more than cards",
+    "level": "casual",
+    "body": "Acting last means you get to see what everyone does before you commit chips. That is why the same hand can be a raise on the button and a fold under the gun. Play more hands late, fewer early."
+  },
+  {
+    "id": "pot-odds",
+    "title": "The price you are being offered",
+    "level": "casual",
+    "body": "If the pot is 100 and it costs you 25 to call, you are being offered 4:1. You need to win more than 20% of the time for that to be worth it. Compare that number to your estimate of winning (the 2 and 4 rule is good enough at the table)."
+  },
+  {
+    "id": "ranges",
+    "title": "Think in ranges, not hands",
+    "level": "skilled",
+    "body": "You never know one exact hand; you know a set of hands that makes sense for what they did. When someone raises under the gun, their range is tight. When they raise on the button, it is wide. Your decision should be against that whole set."
+  },
+  {
+    "id": "aggression",
+    "title": "Betting beats calling",
+    "level": "skilled",
+    "body": "Calling only wins when your hand holds up. Betting wins two ways: your hand holds up, or they fold. That is why a healthy player bets and raises more often than they call, and why the aggression factor in your leak report matters."
+  },
+  {
+    "id": "bankroll",
+    "title": "Choose the right table",
+    "level": "skilled",
+    "body": "A buy-in that is a large share of your chips turns a normal downswing into a disaster. Move down a level when your bankroll drops, and up when it grows. The ladder in OmaPoker is built for exactly this."
+  },
+  {
+    "id": "variance",
+    "title": "Losing streaks are normal",
+    "level": "advanced",
+    "body": "Even a strong player loses sessions and whole weeks. Judge yourself on the quality of your decisions, not on the result of one hand. The leak report is a far better mirror than your chip total."
+  }
+]

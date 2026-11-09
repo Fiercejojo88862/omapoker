@@ -1,0 +1,14 @@
+{
+  "open_raises": {
+    "early": ["77+", "ATs+", "KQs", "AJo+", "KQo"],
+    "middle": ["55+", "A9s+", "KTs+", "QTs+", "JTs", "ATo+", "KJo+", "QJo"],
+    "late": ["22+", "A2s+", "K7s+", "Q8s+", "J8s+", "T8s+", "97s+", "87s+", "A8o+", "K9o+", "Q9o+", "J9o+", "T9o"],
+    "blinds": ["22+", "A2s+", "K5s+", "Q6s+", "J7s+", "T7s+", "96s+", "86s+", "75s+", "A7o+", "K8o+", "Q9o+", "J9o+", "T9o", "98o"]
+  },
+  "three_bets": {
+    "early": ["QQ+", "AKs", "AKo"],
+    "middle": ["TT+", "AQs+", "AKo"],
+    "late": ["99+", "AJs+", "KQs", "AJo+", "KQo"],
+    "blinds": ["TT+", "AQs+", "AKo"]
+  }
+}
